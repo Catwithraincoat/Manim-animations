@@ -1,0 +1,50 @@
+%%manim -qh --format=gif -v WARNING VariableUpperLimit
+class VariableUpperLimit(Scene):
+  def construct(self):
+        ax = Axes (x_range=[0, 10], y_range=[0,5], tips=False, axis_config = {"include_numbers": False,"include_ticks": False})
+        self.play(Create(ax))
+
+        x = ax.x_axis
+        A = x.get_tick(1, size=0.15)
+        a_label = Tex("$a$", color=GREEN)
+        x.add_labels({1: a_label}, direction=DOWN)
+        self.play(Create(A))
+
+        B = x.get_tick(9, size=0.15)
+        b_label = Tex("$b$", color=GREEN)
+        x.add_labels({9: b_label}, direction=DOWN)
+        self.play(Create(B))
+
+        graph = ax.plot(lambda x: np.sin(x/2 + 1) + 2, x_range=[0,10])
+        f_label = MathTex("f", color=WHITE).move_to(ax.c2p(3.2, 1.6))
+        self.play(Create(graph))
+        self.play(Write(f_label))
+
+        v_line = ax.get_vertical_line(ax.c2p(4.5, np.sin(4.5/2 + 1) + 2), color=YELLOW)
+        C = x.get_tick(4.5, size=0.15)
+        c_label = Tex("$x$", color=GREEN).move_to(ax.c2p(4.5, -0.5))
+        # x.add_labels({4.5: c_label})
+        self.play(Create(C))
+        self.play(Create(c_label))
+        self.play(Create(v_line))
+
+        f_area = ax.get_area(graph, x_range=[1,4.5], color=(TEAL_C, YELLOW_B))
+        f_int = MathTex('\int\limits_a^x '+'\ \ '+' \,d x', substrings_to_isolate="").move_to(ax.c2p(3.2, 1.6))
+        self.play(DrawBorderThenFill(f_area), run_time=0.8)
+        self.play(Write(f_int))
+        self.play(f_int.animate.move_to(ax.c2p(3.2, 3.6)).shift(2*RIGHT), f_label.animate.move_to(ax.c2p(3.2, 3.6)).shift(2*RIGHT))
+        self.wait(1)
+
+        f_area2 = ax.get_area(graph, x_range=[1,7], color=(TEAL_C, YELLOW_B))
+        self.play(FadeOut(v_line))
+        self.play(C.animate.move_to(ax.c2p(7)),c_label.animate.move_to(ax.c2p(7, -0.5)),Transform(f_area, f_area2))
+        f_area3 =ax.get_area(graph, x_range=[1,3], color=(TEAL_C, YELLOW_B))
+        self.wait(1)
+        self.play(C.animate.move_to(ax.c2p(3,0)),c_label.animate.move_to(ax.c2p(3, -0.5)),Transform(f_area, f_area3))
+        f_area4 =ax.get_area(graph, x_range=[1,4.5], color=(TEAL_C, YELLOW_B))
+        self.wait(1)
+        self.play(C.animate.move_to(ax.c2p(4.5,0)),c_label.animate.move_to(ax.c2p(4.5, -0.5)),Transform(f_area, f_area4))
+        self.play(FadeIn(v_line))
+
+  
+        self.wait(1)
